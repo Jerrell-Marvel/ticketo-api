@@ -30,6 +30,7 @@ import passport from "passport";
 import googleStrat from "passport-google-oauth20";
 const GoogleStrategy = googleStrat.Strategy;
 import { passportCallback } from "./controllers/user.js";
+import { authMiddleware } from "./middleware/authMiddleware.js";
 
 // Cookie parse
 app.use(cookieParser());
@@ -60,6 +61,8 @@ passport.use(
 // Routes
 app.use("/api/v1", userRoutes);
 app.use(googleAuthRoutes);
+
+// app.get("/test", authMiddleware);
 
 app.get("/", async (req, res) => {
   // try {
