@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import User from "../models/User.js";
-import { NotFoundError, UnauthorizedError, BadRequestError } from "../errors/index.js";
+import { NotFoundError, UnauthorizedError, BadRequestError, ConflictError } from "../errors/index.js";
 import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
@@ -18,6 +18,10 @@ export const login = async (req, res) => {
 
   if (!user) {
     throw new NotFoundError("email is not registered");
+  }
+
+  if (user.isGoogleUser) {
+    throw new ConflictError("email is associated with google account");
   }
 
   const isPasswordMatch = await user.matchPassword(password);
