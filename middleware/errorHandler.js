@@ -9,7 +9,7 @@ export const errorHandler = (err, req, res, next) => {
     message: err.message || "Something went wrong try again later",
   };
 
-  if (err.name === "ValidationError" || err.name === "CastError") {
+  if (err.name === "ValidationError" || err.name === "CastError" || err.name === "MulterError") {
     customError.statusCode = StatusCodes.BAD_REQUEST;
   }
 

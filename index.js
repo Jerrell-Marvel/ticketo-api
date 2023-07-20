@@ -5,6 +5,12 @@ const app = express();
 // Express async errors
 import "express-async-errors";
 
+//Path
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // dotenv
 import dotenv from "dotenv";
 dotenv.config();
@@ -31,12 +37,16 @@ import googleStrat from "passport-google-oauth20";
 const GoogleStrategy = googleStrat.Strategy;
 import { passportCallback } from "./controllers/user.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
+import { fileUpload } from "./middleware/fileUpload.js";
 
 // Cookie parse
 app.use(cookieParser());
 
 // Parse json
 app.use(express.json());
+
+//Serve static
+app.use(express.static("public"));
 
 //Setting up cors
 app.use(
@@ -73,6 +83,15 @@ app.get("/", async (req, res) => {
   // }
   return res.status(200).cookie("s", "dffd", { sameSite: "none", secure: true, httpOnly: true }).json({ success: true });
   throw new BadRequestError("sdkfjlsk");
+});
+
+// Testing file upload
+app.post("/upload", fileUpload("./public").array("photos", 12), async (req, res) => {
+  // console.log(req.headers);
+  // console.log(req.files);
+
+  console.log(req.body);
+  return res.json("jkdfjkl");
 });
 
 //Error handling
