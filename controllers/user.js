@@ -45,11 +45,11 @@ export const signUp = async (req, res) => {
   }
 
   if (!email) {
-    throw new BadRequestError("username required");
+    throw new BadRequestError("email required");
   }
 
   if (!password) {
-    throw new BadRequestError("username required");
+    throw new BadRequestError("password required");
   }
 
   const user = await User.create({ ...req.body });
