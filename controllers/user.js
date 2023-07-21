@@ -65,7 +65,6 @@ export const passportCallback = async (accessToken, refreshToken, profile, done)
 
   let token;
 
-  console.log(user);
   if (!user) {
     user = await User.create({
       username: profile.displayName,

@@ -5,6 +5,9 @@ const app = express();
 // Express async errors
 import "express-async-errors";
 
+// Error handler
+import { errorHandler } from "./middleware/errorHandler.js";
+
 //Path
 import path from "path";
 import { fileURLToPath } from "url";
@@ -28,8 +31,6 @@ import cookieParser from "cookie-parser";
 
 // Routes import
 import userRoutes from "./routes/user.js";
-import googleAuthRoutes from "./routes/googleAuth.js";
-import { errorHandler } from "./middleware/errorHandler.js";
 
 //Passport import
 import passport from "passport";
@@ -62,7 +63,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
+      callbackURL: "/api/v1/auth/google/callback",
     },
     passportCallback
   )
@@ -70,7 +71,6 @@ passport.use(
 
 // Routes
 app.use("/api/v1", userRoutes);
-app.use(googleAuthRoutes);
 
 // app.get("/test", authMiddleware);
 
