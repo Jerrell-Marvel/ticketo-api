@@ -1,6 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import User from "../models/User.js";
-import { NotFoundError, UnauthorizedError, BadRequestError, ConflictError } from "../errors/index.js";
+
+import { NotFoundError } from "../errors/NotFoundError.js";
+import { UnauthorizedError } from "../errors/UnauthorizedError.js";
+import { BadRequestError } from "../errors/BadRequestError.js";
+import { ConflictError } from "../errors/ConflictError.js";
+
 import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {

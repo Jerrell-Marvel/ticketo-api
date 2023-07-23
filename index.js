@@ -2,6 +2,10 @@
 import express from "express";
 const app = express();
 
+// import multer from "multer";
+// const upload = multer();
+// app.use(upload.array("product-images"));
+
 // Express async errors
 import "express-async-errors";
 
@@ -31,6 +35,7 @@ import cookieParser from "cookie-parser";
 
 // Routes import
 import userRoutes from "./routes/user.js";
+import productsRoutes from "./routes/product.js";
 
 //Passport import
 import passport from "passport";
@@ -71,6 +76,7 @@ passport.use(
 
 // Routes
 app.use("/api/v1", userRoutes);
+app.use("/api/v1", productsRoutes);
 
 // app.get("/test", authMiddleware);
 
@@ -89,9 +95,9 @@ app.get("/", async (req, res) => {
 app.post("/upload", fileUpload("./public").array("photos", 12), async (req, res) => {
   // console.log(req.headers);
   // console.log(req.files);
-
-  console.log(req.body);
-  return res.json("jkdfjkl");
+  // console.log(req.body);
+  throw new Error("bad");
+  // return res.json("jkdfjkl");
 });
 
 //Error handling
