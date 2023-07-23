@@ -7,7 +7,7 @@ import { BadRequestError } from "../errors/BadRequestError.js";
 import { getProductData } from "../middleware/products/getProductData.js";
 
 // const storage = multer();
-const upload = multer();
+// const upload = multer();
 
 const router = express.Router();
 

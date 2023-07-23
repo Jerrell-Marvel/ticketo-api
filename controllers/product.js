@@ -7,8 +7,8 @@ import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
 import { InternalServerError } from "../errors/InternalServerError.js";
 
-const currentURL = import.meta.url;
-const currentPath = dirname(fileURLToPath(currentURL));
+// const currentURL = import.meta.url;
+// const currentPath = dirname(fileURLToPath(currentURL));
 
 export const createProduct = async (req, res) => {
   const images = req.files.map((file) => file.filename);
@@ -16,17 +16,6 @@ export const createProduct = async (req, res) => {
   const product = await Product.create({ ...req.body, images });
   return res.json(product);
 };
-
-// export const getProduct = async (req, res, next) => {
-//   const { productId } = req.params;
-//   const product = await Product.findOne({ _id: productId });
-
-//   if (!product) {
-//     throw new NotFoundError("product does not exist");
-//   }
-//   req.product = product;
-//   next();
-// };
 
 export const updateProduct = async (req, res) => {
   const { productId } = req.params;
@@ -45,11 +34,17 @@ export const updateProduct = async (req, res) => {
     }
 
     for (const deleteImg of deleteImages) {
-      const path = resolve(currentPath, `../public/product-images/${deleteImg}`);
+      // absolute path
+      // const path = resolve(currentPath, `../public/product-images/${deleteImg}`);
+
+      // console.log(path);
+      // console.log(`../public/product-images/${deleteImg}`);
 
       try {
-        await fs.unlink(path);
+        // fs.unlink depends on where the app is started (using relative path approach)
+        await fs.unlink(`./public/product-images/${deleteImg}`);
       } catch (err) {
+        console.log(err);
         throw new InternalServerError("failed to delete file");
       }
 
