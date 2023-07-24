@@ -7,6 +7,7 @@ import { BadRequestError } from "../errors/BadRequestError.js";
 import { ConflictError } from "../errors/ConflictError.js";
 
 import jwt from "jsonwebtoken";
+import Cart from "../models/Cart.js";
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -59,6 +60,10 @@ export const signUp = async (req, res) => {
 
   const user = await User.create({ ...req.body });
 
+  const cart = await Cart.create({
+    userId: user._id,
+  });
+
   return res.status(StatusCodes.CREATED).json({ success: true });
 };
 
@@ -75,6 +80,10 @@ export const passportCallback = async (accessToken, refreshToken, profile, done)
       username: profile.displayName,
       email: profile._json.email,
       isGoogleUser: true,
+    });
+
+    const cart = await Cart.create({
+      userId: user._id,
     });
   }
 

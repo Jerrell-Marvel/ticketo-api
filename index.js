@@ -36,6 +36,7 @@ import cookieParser from "cookie-parser";
 // Routes import
 import userRoutes from "./routes/user.js";
 import productsRoutes from "./routes/product.js";
+import cartRoutes from "./routes/cart.js";
 
 //Passport import
 import passport from "passport";
@@ -77,6 +78,7 @@ passport.use(
 // Routes
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", productsRoutes);
+app.use("/api/v1", cartRoutes);
 
 // app.get("/test", authMiddleware);
 
