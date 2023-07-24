@@ -19,11 +19,6 @@ const CartItemSchema = new Schema(
       default: 1,
       required: true,
     },
-
-    price: {
-      type: Number,
-      default: 0,
-    },
   },
   {
     timestamps: true,
@@ -37,16 +32,16 @@ CartItemSchema.index(
   }
 );
 
-CartItemSchema.pre("save", async function (next) {
-  const { productId, quantity } = this;
+// CartItemSchema.pre("save", async function (next) {
+//   const { productId, quantity } = this;
 
-  const product = await Product.findOne({ _id: productId });
+//   const product = await Product.findOne({ _id: productId });
 
-  const productPrice = product.price;
+//   const productPrice = product.price;
 
-  this.price = quantity * productPrice;
-  next();
-});
+//   this.price = quantity * productPrice;
+//   next();
+// });
 
 const CartItem = model("CartItem", CartItemSchema);
 

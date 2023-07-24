@@ -7,18 +7,26 @@ import mongoose from "mongoose";
 export const getCart = async (req, res) => {
   const { username, userId, role, isGoogleUser } = req.user;
 
-  const cart = await Cart.findOne({ userId }).populate({
-    path: "items",
-    populate: {
-      path: "productId",
-    },
-  });
+  // const cart = await Cart.findOne({ userId }).populate({
+  //   path: "items",
+  //   populate: {
+  //     path: "productId",
+  //   },
+  // });
+  const cart = await Cart.findOne({ userId }).populate("items").populate("productId");
 
   if (!cart) {
     throw new NotFoundError("cart not found");
   }
 
-  return res.json(cart);
+  let totalPrice = 0;
+  // cart.items.forEach((item) => {
+  //   totalPrice += item.productId.price * item.quantity;
+  // });
+
+  // TODO : refactor and use mongodb aggregate instead
+
+  return res.json({ ...cart._doc, totalPrice });
 };
 
 export const addCart = async (req, res) => {
@@ -48,10 +56,6 @@ export const addCart = async (req, res) => {
     {
       $push: {
         items: cartItem._id,
-      },
-
-      $inc: {
-        price: cartItem.price,
       },
     },
     {
@@ -83,46 +87,46 @@ export const updateCart = async (req, res) => {
   }
 
   // Returns prev data (not updated)
-  const prevCartItem = await CartItem.findOne({
-    cartId: cart._id,
-    productId,
-  });
+  // const prevCartItem = await CartItem.findOne({
+  //   cartId: cart._id,
+  //   productId,
+  // });
 
-  if (!prevCartItem) {
-    throw new NotFoundError("cart item not found");
-  }
+  // if (!prevCartItem) {
+  //   throw new NotFoundError("cart item not found");
+  // }
 
-  const productPrice = prevCartItem.price / prevCartItem.quantity;
+  // const productPrice = prevCartItem.price / prevCartItem.quantity;
 
-  const newPrice = productPrice * quantity;
+  // const newPrice = productPrice * quantity;
 
   const updatedCartItem = await CartItem.findOneAndUpdate(
     { cartId: cart._id, productId },
-    { quantity, price: newPrice },
+    { quantity },
     {
       new: true,
     }
   );
 
-  const priceDiff = updatedCartItem.price - prevCartItem.price;
+  // const priceDiff = updatedCartItem.price - prevCartItem.price;
 
   //   console.log(`product price : ${productPrice}`);
   //   console.log(`new price : ${newPrice}`);
   //   console.log(`diff price : ${priceDiff}`);
 
-  const updatedCart = await Cart.findOneAndUpdate(
-    {
-      _id: cart._id,
-    },
-    {
-      $inc: {
-        price: priceDiff,
-      },
-    },
-    {
-      new: true,
-    }
-  );
+  // const updatedCart = await Cart.findOneAndUpdate(
+  //   {
+  //     _id: cart._id,
+  //   },
+  //   {
+  //     $inc: {
+  //       price: priceDiff,
+  //     },
+  //   },
+  //   {
+  //     new: true,
+  //   }
+  // );
 
-  return res.json({ updatedCartItem, updatedCart });
+  return res.json({ updatedCartItem });
 };
