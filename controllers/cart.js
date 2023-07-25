@@ -7,22 +7,22 @@ import mongoose from "mongoose";
 export const getCart = async (req, res) => {
   const { username, userId, role, isGoogleUser } = req.user;
 
-  // const cart = await Cart.findOne({ userId }).populate({
-  //   path: "items",
-  //   populate: {
-  //     path: "productId",
-  //   },
-  // });
-  const cart = await Cart.findOne({ userId }).populate("items").populate("productId");
+  const cart = await Cart.findOne({ userId }).populate({
+    path: "items",
+    populate: {
+      path: "productId",
+    },
+  });
+  // const cart = await Cart.findOne({ userId }).populate("items").populate("productId");
 
   if (!cart) {
     throw new NotFoundError("cart not found");
   }
 
   let totalPrice = 0;
-  // cart.items.forEach((item) => {
-  //   totalPrice += item.productId.price * item.quantity;
-  // });
+  cart.items.forEach((item) => {
+    totalPrice += item.productId.price * item.quantity;
+  });
 
   // TODO : refactor and use mongodb aggregate instead
 
@@ -106,7 +106,13 @@ export const updateCart = async (req, res) => {
     {
       new: true,
     }
-  );
+  ).populate("productId");
+
+  if (!updatedCartItem) {
+    throw new NotFoundError("product not found");
+  }
+
+  const newPrice = quantity * updatedCartItem.productId.price;
 
   // const priceDiff = updatedCartItem.price - prevCartItem.price;
 
@@ -128,5 +134,5 @@ export const updateCart = async (req, res) => {
   //   }
   // );
 
-  return res.json({ updatedCartItem });
+  return res.json({ ...updatedCartItem._doc, price: newPrice });
 };
